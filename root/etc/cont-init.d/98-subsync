@@ -1,0 +1,51 @@
+#!/usr/bin/with-contenv bash
+
+# permissions
+chown -R abc:abc \
+	/app/subsync
+	
+if [ ! -f /usr/bin/subsync ]; then
+	apk add --no-cache \
+		libffi-dev \
+		openssl-dev \
+		libgcc \
+		ffmpeg-dev \
+		py3-pybind11-dev \
+		alsa-lib-dev \
+		automake \
+		autoconf \
+		bison \
+		build-base
+	apk add --no-cache \
+		curl \
+		libtool \
+		python3-dev \
+		swig \
+		tar \
+		xz
+
+	python3 -m ensurepip
+	rm -r /usr/lib/python*/ensurepip
+	pip3 install --upgrade pip setuptools
+	rm -r /root/.cache
+
+	cd /build/sphinxbase-5prealpha
+	./configure --enable-fixed
+	make
+	make install
+
+	cd /build/pocketsphinx-5prealpha
+	./configure
+	make
+	make install
+
+	export FFMPEG_DIR=/build/ffmpeg
+	export SPHINXBASE_DIR=/build/sphinxbase-5prealpha
+	export POCKETSPHINX_DIR=/build/pocketsphinx-5prealpha
+	export USE_PKG_CONFIG=no
+
+	pip3 install /app/subsync/
+	
+	rm -r /build/
+	rm -r /app/subsync/
+fi
