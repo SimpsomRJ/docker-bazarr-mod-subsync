@@ -1,5 +1,5 @@
 ## Buildstage ##
-FROM lsiobase/alpine:3.11 as buildstage
+FROM lsiobase/alpine:3.14 as buildstage
 
 ## Download dependencies ##
 RUN \
