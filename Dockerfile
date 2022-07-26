@@ -1,10 +1,13 @@
 ## Buildstage ##
-FROM lsiobase/alpine:3.12 as buildstage
+FROM lsiobase/alpine:3.11 as buildstage
 
 ## Download dependencies ##
-RUN apk add --no-cache \
-	wget \
-	git
+RUN \
+    apk update && \
+    apk add -U --no-cache \
+    wget \
+    git && \
+    apk --no-cache upgrade
 
 WORKDIR /root-layer/build
 
